@@ -1,0 +1,37 @@
+rules:
+  - id: dangerous-eval
+    patterns:
+      - pattern: eval(...)
+    message: "Use of eval() on user-controlled input is dangerous."
+    severity: ERROR
+    languages: [python]
+
+  - id: pickle-deserialization
+    patterns:
+      - pattern: pickle.loads(...)
+    message: "Unsafe deserialization via pickle.loads on untrusted input."
+    severity: ERROR
+    languages: [python]
+
+  - id: yaml-load
+    patterns:
+      - pattern: yaml.load(...)
+    message: "Use yaml.safe_load() instead of yaml.load() to avoid code execution."
+    severity: WARNING
+    languages: [python]
+
+  - id: shell-true-subprocess
+    patterns:
+      - pattern: subprocess.call(..., shell=True)
+    message: "Avoid shell=True with unsanitized input; prefer list args or subprocess.run without shell."
+    severity: ERROR
+    languages: [python]
+
+  - id: hardcoded-password
+    patterns:
+      - pattern: $X = "$SECRET"
+      - pattern-either:
+          - pattern: DB_PASSWORD = "$SECRET"
+    message: "Hardcoded credential detected. Use secret managers or environment variables."
+    severity: WARNING
+    languages: [python]
